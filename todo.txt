@@ -1,0 +1,66 @@
+# 1️⃣ PROJECT OVERVIEW: "Cultivation – Grow Your Self"
+I am building a comprehensive personal development and analysis platform named "Cultivation". 
+The goal is to provide users (primarily university students) a holistic view of their progress across study habits, fitness, nutrition, mood, and health.
+
+Tech Stack:
+- Backend: FastAPI (Python)
+- Database: Microsoft SQL Server (MSSQL) using SQLAlchemy ORM
+- Connection: mssql+pyodbc (Driver: ODBC Driver 17 for SQL Server)
+- Auth: JWT with Bcrypt hashing
+- Frontend: React (Web) & Flutter (Mobile)
+- AI/Data Science: Pandas, NumPy (for descriptive analytics and basic statistics)
+
+# 2️⃣ MODULAR BACKEND STRUCTURE
+app/
+  main.py           # FastAPI entrypoint
+  core/             # Config, Security (JWT/Bcrypt), Constants
+  db/               # database.py (MSSQL pyodbc session & engine)
+  models/           # SQLAlchemy ORM models (MSSQL compatible)
+  schemas/          # Pydantic schemas (Data validation)
+  api/              # v1/endpoints (auth, logs, goals, habits, etc.)
+  services/         # Business logic & Basic Statistics (analytics.py)
+
+# 3️⃣ DATABASE MODELS (T-SQL / MSSQL Optimized)
+
+## User
+- id: INT (Identity, PK), full_name: NVARCHAR(100)
+- email: NVARCHAR(120), Unique, Indexed
+- password_hash: NVARCHAR(MAX)
+- birth_date: DATE, gender: NVARCHAR(20)
+- weight: DECIMAL(5,2), height: INT
+- created_at: DATETIME (GETDATE())
+
+## DailyLog (Core Tracking)
+- user_id (FK), log_date (DATE), notes (NVARCHAR(MAX))
+- study_minutes, calories_burned, water_intake_ml (INT)
+- sleep_hours (DECIMAL), productivity_score (INT 1-10)
+- UNIQUE(user_id, log_date)
+
+## Habit & HabitLog (Check-in System)
+- Habit: user_id (FK), habit_name, frequency, target_per_week (INT)
+- HabitLog: habit_id (FK), log_date (DATE), is_completed (BIT)
+- UNIQUE(habit_id, log_date)
+
+## MoodRecord
+- user_id (FK), mood_tag (NVARCHAR(50)), mood_score (INT 1-10), record_date (DATE)
+
+## HealthRecord (Period & Supplement Tracking)
+- user_id (FK), record_type (NVARCHAR(50)), start_date (DATE), end_date (DATE)
+- intensity (NVARCHAR(30)), notes (NVARCHAR(MAX))
+- Note: Currently focus on tracking/logging only (No prediction logic for now).
+
+## UserStats (Gamification)
+- user_id (PK/FK), total_points (INT), current_level (INT), streak_count (INT)
+
+# 4️⃣ TECHNICAL REQUIREMENTS & CONSTRAINTS
+- Use 'ODBC Driver 17 for SQL Server' in the connection string.
+- Handle Booleans as BIT and long texts as NVARCHAR(MAX) for MSSQL compatibility.
+- Ensure 'ON DELETE CASCADE' is active for all user-related foreign keys.
+- JWT expiration should be configurable (default 30 mins).
+- AI Service: 'app/services/analytics.py' should calculate basic statistics (averages, sums, weekly completion rates) using Pandas.
+
+# 5️⃣ INSTRUCTIONS FOR CURSOR
+- First, generate the folder structure and requirements.txt.
+- Implement 'app/db/database.py' and 'app/core/security.py' to ensure connectivity and safety.
+- Define all SQLAlchemy models before creating any API endpoints.
+- Keep the code DRY, modular, and use Type Hints everywhere.
