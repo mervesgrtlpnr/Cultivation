@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cultivation - WP4 Prototype</title>
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --secondary: #0ea5e9;
+      --success: #22c55e;
+      --warning: #f59e0b;
+      --error: #ef4444;
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --text: #0f172a;
+      --outline: #cbd5e1;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, Roboto, Arial, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+    }
+    .layout { display: grid; grid-template-columns: 250px 1fr; min-height: 100vh; }
+    .sidebar {
+      background: var(--surface);
+      border-right: 1px solid var(--outline);
+      padding: 20px 16px;
+    }
+    .brand { font-weight: 800; font-size: 20px; margin-bottom: 20px; color: var(--primary); }
+    .menu button {
+      width: 100%;
+      border: 1px solid var(--outline);
+      background: white;
+      border-radius: 10px;
+      padding: 10px 12px;
+      text-align: left;
+      margin-bottom: 8px;
+      cursor: pointer;
+    }
+    .menu button.active { border-color: var(--primary); background: #eef2ff; }
+    .main { padding: 24px; }
+    .top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .title { font-size: 26px; font-weight: 700; margin: 0; }
+    .card-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--outline);
+      border-radius: 16px;
+      padding: 16px;
+    }
+    .card h3 { margin: 0 0 8px 0; font-size: 14px; color: #475569; font-weight: 600; }
+    .metric { font-size: 26px; font-weight: 700; }
+    .section { margin-top: 16px; }
+    .section h2 { margin: 0 0 10px 0; font-size: 20px; }
+    .hidden { display: none; }
+    .form {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      background: var(--surface);
+      border: 1px solid var(--outline);
+      border-radius: 16px;
+      padding: 16px;
+    }
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    .field.full { grid-column: 1 / -1; }
+    input, textarea, select {
+      height: 44px;
+      border: 1px solid var(--outline);
+      border-radius: 10px;
+      padding: 8px 10px;
+      font-size: 14px;
+      font-family: inherit;
+    }
+    textarea { height: 100px; resize: vertical; }
+    .btn {
+      height: 44px;
+      border: none;
+      border-radius: 12px;
+      padding: 0 14px;
+      color: white;
+      background: var(--primary);
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .goal-list { margin-top: 12px; display: grid; gap: 8px; }
+    .goal-item {
+      display: flex; justify-content: space-between; align-items: center;
+      background: var(--surface); border: 1px solid var(--outline);
+      border-radius: 12px; padding: 12px;
+    }
+    .tag {
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 12px;
+      border: 1px solid var(--outline);
+    }
+    .tag.active { background: #ecfeff; color: #0e7490; }
+    .tag.done { background: #f0fdf4; color: #15803d; }
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { border-right: none; border-bottom: 1px solid var(--outline); }
+      .card-grid { grid-template-columns: 1fr 1fr; }
+      .form { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">Cultivation</div>
+      <div class="menu">
+        <button class="nav active" data-screen="dashboard">Dashboard</button>
+        <button class="nav" data-screen="daily">Gunluk Kayit</button>
+        <button class="nav" data-screen="goals">Hedefler</button>
+        <button class="nav" data-screen="landing">Ana Sayfa</button>
+      </div>
+    </aside>
+    <main class="main">
+      <section id="screen-dashboard">
+        <div class="top">
+          <h1 class="title">Kontrol Paneli</h1>
+          <button class="btn">Yeni Kayit</button>
+        </div>
+        <div class="card-grid">
+          <div class="card"><h3>Bugunku Calisma</h3><div class="metric">145 dk</div></div>
+          <div class="card"><h3>Haftalik Hedef</h3><div class="metric">%68</div></div>
+          <div class="card"><h3>Ortalama Mood</h3><div class="metric">7.9</div></div>
+          <div class="card"><h3>Streak</h3><div class="metric">11 gun</div></div>
+        </div>
+      </section>
+
+      <section id="screen-daily" class="hidden">
+        <div class="top"><h1 class="title">Gunluk Kayit</h1></div>
+        <form class="form">
+          <div class="field"><label>Tarih</label><input type="date" /></div>
+          <div class="field"><label>Calisma (dk)</label><input type="number" placeholder="120" /></div>
+          <div class="field"><label>Su (ml)</label><input type="number" placeholder="2000" /></div>
+          <div class="field"><label>Uyku (saat)</label><input type="number" step="0.5" placeholder="7.5" /></div>
+          <div class="field"><label>Verimlilik (1-10)</label><input type="number" min="1" max="10" /></div>
+          <div class="field full"><label>Notlar</label><textarea placeholder="Bugun neler yaptin?"></textarea></div>
+          <div class="field full"><button type="button" class="btn">Kaydet</button></div>
+        </form>
+      </section>
+
+      <section id="screen-goals" class="hidden">
+        <div class="top"><h1 class="title">Hedefler</h1></div>
+        <form class="form">
+          <div class="field"><label>Hedef Basligi</label><input placeholder="Haftada 5 gun spor" /></div>
+          <div class="field"><label>Hedef Tarih</label><input type="date" /></div>
+          <div class="field full"><label>Aciklama</label><textarea placeholder="Detay ekle"></textarea></div>
+          <div class="field full"><button type="button" class="btn">Hedef Ekle</button></div>
+        </form>
+        <div class="goal-list">
+          <div class="goal-item"><span>Her gun 2 saat ders</span><span class="tag active">Devam Ediyor</span></div>
+          <div class="goal-item"><span>Gunluk 2L su</span><span class="tag done">Tamamlandi</span></div>
+        </div>
+      </section>
+
+      <section id="screen-landing" class="hidden">
+        <div class="top"><h1 class="title">Ana Sayfa</h1></div>
+        <div class="card">
+          <h2 style="margin-top:0">Cultivation ile gelisimini izle</h2>
+          <p>Gunluk aliskanliklarini, ruh halini ve hedeflerini tek noktadan yonet.</p>
+          <div style="display:flex; gap:10px;">
+            <button class="btn">Hemen Basla</button>
+            <button class="btn" style="background:var(--secondary)">Giris Yap</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const navButtons = document.querySelectorAll(".nav");
+    const screens = ["dashboard", "daily", "goals", "landing"];
+    navButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        navButtons.forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        const target = btn.dataset.screen;
+        screens.forEach((id) => {
+          document.getElementById(`screen-${id}`).classList.add("hidden");
+        });
+        document.getElementById(`screen-${target}`).classList.remove("hidden");
+      });
+    });
+  </script>
+</body>
+</html>
+
